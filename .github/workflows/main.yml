@@ -5,7 +5,7 @@ on:
 jobs:
   kaniko-build-push-docker-hub:
     runs-on: k8s-runner
-    container: gcr.io/kaniko-project/executor:debug
+    container: busybox
     steps:
       - name: add Docker Hub credentials
         run: |

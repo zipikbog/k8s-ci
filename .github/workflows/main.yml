@@ -1,0 +1,18 @@
+name: Test pipline
+on:
+  workflow_dispatch:
+  push:
+    branches:
+      - 'main'
+  pull_request:
+    branches:
+      - 'main'
+
+jobs:
+  test:
+    runs-on: k8s-runner
+    container: busybox:musl
+    steps:
+      - name: showe ENV
+        run: |
+          env

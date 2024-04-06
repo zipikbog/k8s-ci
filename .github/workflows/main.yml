@@ -5,10 +5,10 @@ on:
 jobs:
   container-test-job:
     runs-on: k8s-runner
-    container:
-      image: gcr.io/kaniko-project/executor:v1.14.0-debug
+#    container:
+#      image: gcr.io/kaniko-project/executor:v1.14.0-debug
     steps:
-      - uses: actions/checkout@v2
+      - uses: actions/checkout@v4
       - name: Check for dockerenv file
         run: |
           ls -l

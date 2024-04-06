@@ -17,8 +17,8 @@ jobs:
 #          ls -l
 #          sleep 300
       - name: Kaniko build & push
-          uses: bymarshall/kaniko-action@main
-          with:
+        uses: bymarshall/kaniko-action@main
+        with:
             push: true
             tags: ${{ steps.metadata.outputs.tags }}
             labels: ${{ steps.metadata.outputs.labels }}

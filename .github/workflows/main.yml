@@ -6,7 +6,7 @@ jobs:
   container-test-job:
     runs-on: k8s-runner
     container:
-       image: gcr.io/kaniko-project/executor:v1.14.0-debug
+       image: alpine/helm:3.14.1
     permissions:
       contents: read
       packages: write

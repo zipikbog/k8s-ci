@@ -8,8 +8,13 @@ jobs:
     container:
        image: gcr.io/kaniko-project/executor:v1.20.0-debug
     steps:
+    - name: test
+      uses: actions/setup-node@v4
+        with:
+          node-version: '14'
 #      - name: Checkout code
 #        uses: actions/checkout@v4
+
       - name: Check for dockerenv file
         run: |
           pwd

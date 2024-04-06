@@ -11,3 +11,4 @@ jobs:
       - name: Check for dockerenv file
         run: |
           ls -la /github/workflow
+          sleep 300

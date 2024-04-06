@@ -9,7 +9,7 @@ jobs:
        image: gcr.io/kaniko-project/executor:v1.20.0-debug
     steps:
       - name: Checkout code
-        uses: actions/checkout@v4
+        uses: actions/checkout@v3
       - name: Check for dockerenv file
         run: |
           pwd

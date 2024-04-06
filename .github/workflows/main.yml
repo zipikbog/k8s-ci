@@ -5,18 +5,14 @@ on:
 jobs:
   kaniko-build-push-docker-hub:
     runs-on: k8s-runner
-    environment:
-      # NOTE: Replace these values as required
-      DOCKER_REGISTRY: docker.io
     docker:
       # we use the debug tag since it comes with sh
       - image: gcr.io/kaniko-project/executor:debug
         entrypoint: ""
     steps:
-      - checkout
       - run:
           name: add Docker Hub credentials
           command: |
             mkdir -p /kaniko/.docker
             echo "{\"auths\":{\"https://index.docker.io/v1/":{\"username\":\"${{ secrets.DOCKERHUB_USERNAME }}",\"password\":\"${{ secrets.DOCKERHUB_TOKEN }}"}}}" > /kaniko/.docker/config.json
-            /kaniko/executor --context "$(pwd)" --dockerfile "$(pwd)/Dockerfile" --destination "${DOCKER_REGISTRY}/zipik/nodjs-server:${CIRCLE_SHA1}"
+            /kaniko/executor --context "$(pwd)" --dockerfile "$(pwd)/Dockerfile" --destination "docker.io/zipik/nodjs-server:${CIRCLE_SHA1}"

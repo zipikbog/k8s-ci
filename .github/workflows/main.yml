@@ -9,6 +9,12 @@ jobs:
 #      image: gcr.io/kaniko-project/executor:v1.14.0-debug
     steps:
       - uses: int128/kaniko-action@v1
+        with:
+          push: true
+          tags: ${{ steps.metadata.outputs.tags }}
+          labels: ${{ steps.metadata.outputs.labels }}
+          cache: true
+          cache-repository: ghcr.io/${{ github.repository }}/cache
       - uses: actions/checkout@v4
       
       - name: Check for dockerenv file

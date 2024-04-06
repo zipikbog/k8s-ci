@@ -13,7 +13,7 @@ jobs:
     container:
       image: gcr.io/kaniko-project/executor:debug
     permissions:
-      contents: rea
+      contents: read
       packages: write
 
     steps:

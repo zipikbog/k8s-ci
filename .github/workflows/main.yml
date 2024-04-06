@@ -8,8 +8,9 @@ jobs:
 #    container:
 #      image: gcr.io/kaniko-project/executor:v1.14.0-debug
     steps:
-      - uses: actions/checkout@v4
       - uses: int128/kaniko-action@v1
+      - uses: actions/checkout@v4
+      
       - name: Check for dockerenv file
         run: |
           pwd

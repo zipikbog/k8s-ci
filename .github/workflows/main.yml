@@ -7,7 +7,6 @@ jobs:
     runs-on: k8s-runner
     container: 
      image: gcr.io/kaniko-project/executor:v1.14.0-debug
-     entrypoint: [""]
     steps:
       - name: add Docker Hub credentials
         run: |

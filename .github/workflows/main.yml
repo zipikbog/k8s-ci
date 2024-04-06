@@ -1,84 +1,19 @@
-name: Build
-
+name: CI
 on:
   push:
-    branches-ignore:
-      - master
-    paths-ignore:
-      - README.md
-
+    branches: [ main ]
 jobs:
-  build:
-    name: Build a Docker/OCI image
-    env:
-      IMAGE_NAME: zipik/nodjs-server
+  container-test-job:
     runs-on: k8s-runner
+    container:
+      image: node:18
+      env:
+        NODE_ENV: development
+      ports:
+        - 80
+      volumes:
+        - my_docker_volume:/volume_mount
+      options: --cpus 1
     steps:
-      - uses: actions/checkout@master
-      - name: Generate a config.json
-        run: |
-          cat <<JSON > config.json
-          {
-            "auths": {
-              "docker.pkg.github.com": {
-                "auth": "$(echo -n :${{ secrets.k8s-token }} | base64)"
-              }
-            }
-          }
-          JSON
-      - name: Build an image
-        run: |
-          docker run \
-            -v $(pwd):/workspace \
-            -v $(pwd)/config.json:/kaniko/.docker/config.json:ro \
-            gcr.io/kaniko-project/executor:latest \
-              --context dir:///workspace/ \
-              --dockerfile Dockerfile \
-              --cache=true \
-              --cache-repo docker.pkg.github.com/${GITHUB_REPOSITORY}/${IMAGE_NAME}-cache \
-              --no-push
-name: Push
-
-on:
-  push:
-    branches:
-      - master    
-jobs:
-  push:
-    name: Push a Docker/OCI image
-    env:
-      IMAGE_NAME: zipik/nodjs-server
-    runs-on: k8s-runner
-    steps:
-      - uses: actions/checkout@master
-      - name: Generate a config.json
-        run: |
-          cat <<JSON > config.json
-          {
-            "auths": {
-              "docker.pkg.github.com": {
-                "auth": "$(echo -n :${{ secrets.GITHUB_TOKEN }} | base64)"
-              }
-            }
-          }
-          JSON
-      - name: Build and push an image
-        run: |
-          tag=${GITHUB_REF##*/}
-
-          if [[ ${tag} == master ]]
-          then
-            tag="latest"
-          fi
-
-          echo "tag: ${tag}"
-
-          docker run \
-            -v $(pwd):/workspace \
-            -v $(pwd)/config.json:/kaniko/.docker/config.json:ro \
-            gcr.io/kaniko-project/executor:latest \
-              --context dir:///workspace/ \
-              --dockerfile Dockerfile \
-              --destination docker.pkg.github.com/${GITHUB_REPOSITORY}/${IMAGE_NAME}:${tag} \
-              --cache=true \
-              --cache-repo docker.pkg.github.com/${GITHUB_REPOSITORY}/${IMAGE_NAME}-cache
+      - name: Check for dockerenv file
+        run: (ls /.dockerenv && echo Found dockerenv) || (echo No dockerenv)

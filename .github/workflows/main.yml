@@ -10,20 +10,27 @@ on:
 jobs:
   build:
     runs-on: k8s-runner
-    steps:
-      - uses: actions/checkout@v3
-      - uses: docker/metadata-action@v3
+    container:
+      image: gcr.io/kaniko-project/executor:debug
+    permissions:
+      contents: rea
+      packages: write
 
-      - uses: docker/login-action@v1
-        with:
-          registry: ghcr.io
-          username: ${{ github.actor }}
-          password: ${{ secrets.windows-token }}
-      - uses: int128/kaniko-action@v1
-        with:
-          push: true
-          tags: ${{ steps.metadata.outputs.tags }}
-          labels: ${{ steps.metadata.outputs.labels }}
-          cache: true
-          cache-repository: ghcr.io/${{ github.repository }}/cache
+    steps:
+      - name: Build and push container test
+        run: |
+          # Write config file, change to your destination registry
+          AUTH=$(echo -n ${{ github.actor }}:${{ secrets.windows-token }} | base64)
+          echo "{\"auths\": {\"ghcr.io\": {\"auth\": \"${AUTH}\"}}}" > /kaniko/.docker/config.json
+
+          # Configure git
+          export GIT_USERNAME="zipikbog"
+          export GIT_PASSWORD="${{ secrets.windows-token }}"
+
+          # Build and push (sub in your image, of course)
+          /kaniko/executor --dockerfile="./images/ubi9.Dockerfile" \
+            --context="${{ github.repositoryUrl }}#${{ github.ref }}#${{ github.sha }}" \
+            --destination="ghcr.io/some-natalie/kubernoodles/kaniko-build:test" \
+            --push-retry 5 \
+            --image-name-with-digest-file /workspace/image-digest.txt
       

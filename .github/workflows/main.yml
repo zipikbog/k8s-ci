@@ -5,7 +5,9 @@ on:
 jobs:
   kaniko-build-push-docker-hub:
     runs-on: k8s-runner
-    container: gcr.io/kaniko-project/executor:v1.14.0-debug
+    container: 
+     image: gcr.io/kaniko-project/executor:v1.14.0-debug
+     entrypoint: [""]
     steps:
       - name: add Docker Hub credentials
         run: |

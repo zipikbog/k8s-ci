@@ -5,10 +5,7 @@ on:
 jobs:
   kaniko-build-push-docker-hub:
     runs-on: k8s-runner
-    docker:
-      # we use the debug tag since it comes with sh
-      - image: gcr.io/kaniko-project/executor:debug
-        entrypoint: ""
+    container: gcr.io/kaniko-project/executor:debug
     steps:
       - run:
           name: add Docker Hub credentials

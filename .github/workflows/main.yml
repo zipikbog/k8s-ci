@@ -6,7 +6,7 @@ jobs:
   container-test-job:
     runs-on: k8s-runner
     container:
-       image: alpine/helm:3.14.1
+       image: bitnami/kaniko
     permissions:
       contents: read
       packages: write

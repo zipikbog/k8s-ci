@@ -6,7 +6,7 @@ jobs:
   container-test-job:
     runs-on: k8s-runner
     container:
-       image: gcr.io/kaniko-project/executor:debug
+       image: gcr.io/kaniko-project/executor:v1.20.0-debug
     steps:
       - name: Checkout code
         uses: actions/checkout@v4

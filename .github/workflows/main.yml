@@ -7,22 +7,25 @@ on:
   pull_request:
     branches:
       - 'main'
-
 jobs:
-  test:
+  build:
     runs-on: k8s-runner
-    container: busybox:musl
     steps:
-      - name: showe ENV
-        run: |
-          env
-  docker:
-    runs-on: k8s-runner
-    container: gcr.io/kaniko-project/executor:v1.14.0-debug
-    steps:
-      - name: kanika 
-        run: |
-          mkdir -p /kaniko/.docker
-          echo "{\"auths\":{\"$CI_REGISTRY\":{\"username\":\"$CI_REGISTRY_USER\",\"password\":\"$CI_REGISTRY_PASSWORD\"}}}" > /kaniko/.docker/config.json
-          /kaniko/executor --context "{$GITHUB_WORKSPACE}" --dockerfile "{$GITHUB_WORKSPACE}/Dockerfile" --destination zipik/nodjs-server:$GITHUB_SHA
+      - uses: actions/checkout@v3
+      - uses: docker/metadata-action@v3
+        id: metadata
+        with:
+          images: ghcr.io/${{ github.repository }}
+      - uses: docker/login-action@v1
+        with:
+          registry: ghcr.io
+          username: ${{ github.actor }}
+          password: ${{ secrets.GITHUB_TOKEN }}
+      - uses: int128/kaniko-action@v1
+        with:
+          push: true
+          tags: ${{ steps.metadata.outputs.tags }}
+          labels: ${{ steps.metadata.outputs.labels }}
+          cache: true
+          cache-repository: ghcr.io/${{ github.repository }}/cache
       

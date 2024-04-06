@@ -10,4 +10,6 @@ jobs:
     steps:
       - name: Check for dockerenv file
         run: |
+          cd $RUNNER_WORKSPACE 
           pwd
+          ls

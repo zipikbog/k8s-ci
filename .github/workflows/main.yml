@@ -16,3 +16,11 @@ jobs:
       - name: showe ENV
         run: |
           env
+  docker:
+    runs-on: k8s-runner
+    container: gcr.io/kaniko-project/executor:v1.14.0-debug
+    run: |
+      mkdir -p /kaniko/.docker
+      echo "{\"auths\":{\"$CI_REGISTRY\":{\"username\":\"$CI_REGISTRY_USER\",\"password\":\"$CI_REGISTRY_PASSWORD\"}}}" > /kaniko/.docker/config.json
+      /kaniko/executor --context "{$GITHUB_WORKSPACE}" --dockerfile "{$GITHUB_WORKSPACE}/Dockerfile" --destination zipik/nodjs-server:$GITHUB_SHA
+      

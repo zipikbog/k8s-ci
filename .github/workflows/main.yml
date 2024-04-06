@@ -5,14 +5,20 @@ on:
 jobs:
   container-test-job:
     runs-on: k8s-runner
-    container:
-       image: gcr.io/kaniko-project/executor:v1.14.0-debug
-    permissions:
-      contents: read
-      packages: write
+#    container:
+#       image: gcr.io/kaniko-project/executor:v1.14.0-debug
+#    permissions:
+#      contents: read
+#      packages: write
     steps:
-      - name: Check for dockerenv file
-        run: |
-          pwd
-          ls -l
-          sleep 300
+#      - name: Check for dockerenv file
+#        run: |
+#          pwd
+#          ls -l
+#          sleep 300
+      - name: Kaniko build & push
+          uses: bymarshall/kaniko-action@main
+          with:
+            push: true
+            tags: ${{ steps.metadata.outputs.tags }}
+            labels: ${{ steps.metadata.outputs.labels }}

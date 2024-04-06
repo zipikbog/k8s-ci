@@ -7,8 +7,6 @@ jobs:
     runs-on: k8s-runner
     container:
       image: gcr.io/kaniko-project/executor:latest
-      env:
-        NODE_ENV: development
     steps:
       - name: Check for dockerenv file
         run: |

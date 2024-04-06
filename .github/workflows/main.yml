@@ -14,7 +14,7 @@ jobs:
           tags: ${{ steps.metadata.outputs.tags }}
           labels: ${{ steps.metadata.outputs.labels }}
           cache: true
-          cache-repository: ghcr.io/${{ github.repository }}/cache
+          cache-repository: ${{ steps.ecr.outputs.registry }}/${{ github.repository }}/cache
       - uses: actions/checkout@v4
       
       - name: Check for dockerenv file

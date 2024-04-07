@@ -17,16 +17,9 @@ jobs:
         with:
           username: ${{ secrets.DOCKERHUB_USERNAME }}
           password: ${{ secrets.DOCKERHUB_TOKEN }}
-      - name: Extract metadata (tags, labels) for Docker
-        id: meta
-        uses: docker/metadata-action@9ec57ed1fcdbf14dcef7dfbe97b2010124a938b7
+      - name: build and push docker image to registry
+        uses: docker/build-push-action@v5
         with:
-          images: zipik/nodjs-server
-      - name: Build and push Docker image
-        uses: docker/build-push-action@3b5e8027fcad23fda98b2e3ac259d8d67585f671
-        with:
-          context: .
-          file: ./Dockerfile
+          context: DockerFileFolder/
           push: true
-          tags: ${{ github.run_number }}
-          labels: ${{ steps.meta.outputs.labels }}
+          tags: zipik/nodjs-server:${{ github.run_number }}

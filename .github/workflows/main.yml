@@ -1,7 +1,8 @@
 name: Publish Docker image
 
 on: push
-
+env:
+  NAMESPACE: test1
 jobs:
   push_to_registry:
     name: Push Docker image to Docker Hub
@@ -23,3 +24,13 @@ jobs:
           context: .
           push: true
           tags: zipik/nodjs-server:${{ github.run_number }}
+deploy-job:
+    name: Deploy and running nodejs app
+    runs-on: k8s-runne
+    container: alpine/helm:3.14.1
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+      - name: deploy helm
+        run: |
+          helm upgrade --install nodejs-server --set image.tag=${{ github.run_number }} .\helm-app\ --namespace test1 --create-namespace

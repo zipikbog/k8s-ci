@@ -5,7 +5,7 @@ env:
 jobs:
   deploy-job:
       name: Deploy and running nodejs app
-      runs-on: k8s-runne
+      runs-on: k8s-runner
       container: alpine/helm:3.14.1
       steps:
         - name: Checkout code
